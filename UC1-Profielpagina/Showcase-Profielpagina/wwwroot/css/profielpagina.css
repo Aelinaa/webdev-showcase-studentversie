@@ -6,26 +6,36 @@
     font-family: Arial;
 }
 
+.navbar-color {
+    background-color: #fffafd;
+}
+
 .personalia {
-    background-color: lightpink;
+    background-color: #ffd8e8;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 15px 15px 0px 0px;
 }
 
 .profile {
-    background-color: pink;
+    background-color: #ffedf4;
     width: 100%;
+    border-radius: 0px 0px 15px 15px;
 }
 
 .person-logo {
-    border: 4px solid black;
+    border: 6px dotted black;
     border-radius: 50%;
-    border-color:#FF00C3;
+    border-color: #71548b;
     margin: 15px 0px 15px 0px;
     width: 50%;
     animation: glow 3s ease alternate;
+}
+
+.person-name{
+    margin: 100px 0px 0px 0px;
 }
 
 .profile-content {
@@ -34,7 +44,7 @@
 }
 
 .profile-content__category-title {
-    color: #FF00C3;
+    color: #71548b;
 }
 
 .profile-content__category--hidden-mobile {
@@ -57,6 +67,7 @@
     font-size: 18px;
     margin-bottom: 2px;
     margin-top: 6px;
+    color: #71548b;
 }
 
 .profile-content__period {
@@ -64,7 +75,7 @@
 }
 
 .profile-content__institute {
-    color: hotpink;
+    color: #7a94b6;
     margin-top: 0px;
     font-size: 14px;
 }
@@ -75,9 +86,14 @@
         flex-direction: row;
     }
 
+    .profile {
+        border-radius: 0px 15px 15px 0px;
+    }
+
     .person-name {
         order: -1;
-        color: #FF00C3;
+        color: #71548b;
+        font-weight: bold;
     }
 
     .profile-content__category--hidden-mobile {
@@ -93,7 +109,8 @@
 
     .profile-content__element--hidden-mobile {
         display: flex;
-        color: hotpink;
+        color: #7a94b6;
+        
     }
 
     .profile-content__element-header {
@@ -104,8 +121,12 @@
 
     .profile-content__period {
         font-size: 12px;
-        color: deeppink;
+        color: #adbbce;
         display: flex;
+    }
+
+    .personalia {
+        border-radius: 15px 0px 0px 15px;
     }
 }
 
