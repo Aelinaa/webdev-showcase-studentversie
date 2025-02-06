@@ -18,6 +18,18 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-  background-color: #fffafd;
+    margin-bottom: 60px;
+    background-color: #fefdfe;
+}
+
+.navbar-color {
+    background-color: #fafaf7;
+}
+
+.title-color {
+    color: #ca7c83 !important; /* Change to any color you want */
+}
+
+.secondary-color {
+    color: #e8b0b5 !important; /* Change to any color you want */
 }

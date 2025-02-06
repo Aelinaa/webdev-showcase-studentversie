@@ -16,37 +16,58 @@
     padding: 10px;
     margin: 5px;
     border: 2px solid gray;
+    background: #fffcfd;
     border-radius: 15px 15px 15px 15px;
 }
 
-.gdpr-consent__description{
+.gdpr-consent__description {
     display: flex;
     justify-content: center;
+    color: #4d4949;
+    background: #fffcfd;
+    border-radius: 15px 15px 0px 0px;
 }
 
-.gdpr-consent__choice{
+.gpdr-consent-status {
+    color: #ca7c83;
+}
+
+.gdpr-content-text {
+    color: #4d4949;
+}
+
+.gdpr-consent__choice {
     display: flex;
+    background: #fffcfd;
+    border-radius: 0px 0px 15px 15px;
     flex-direction: row-reverse;
     justify-content: space-evenly;
     width: 100%;
 }
 
-.gdpr-consent__button--accept {
-    background-color: #d5f5d5;
+.gdpr-consent__button--Accepted {
+    background-color: #e6f7e6;
     padding: 10px;
     border-radius: 10px;
     border: 1px solid gray;
+    color: #4d4949;
 }
 
-.gdpr-consent__button--accept:hover {
-    background-color: #c5e3c5;
+.gdpr-consent__button--Accepted:hover {
+    background-color: #cae6ca;
 }
 
-.gdpr-consent__button--reject {
+.gdpr-consent__button--Rejected {
     padding: 10px;
     border-radius: 10px;
     border: 1px solid gray;
+    background-color: #f7e9e6;
+    color: #4d4949;
 }
+
+    .gdpr-consent__button--Rejected:hover {
+        background-color: #edd6d1;
+    }
 
 .hide{
     display: none;

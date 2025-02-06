@@ -6,36 +6,33 @@
     font-family: Arial;
 }
 
-.navbar-color {
-    background-color: #fffafd;
-}
-
 .personalia {
-    background-color: #ffd8e8;
+    background-color: #faebec;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 600px;
     border-radius: 15px 15px 0px 0px;
 }
 
 .profile {
-    background-color: #ffedf4;
+    background-color: #f5f5f3;
     width: 100%;
     border-radius: 0px 0px 15px 15px;
 }
 
 .person-logo {
-    border: 6px dotted black;
+    border: 9px dotted black;
     border-radius: 50%;
-    border-color: #71548b;
+    border-color: #eeb6bb;
     margin: 15px 0px 15px 0px;
     width: 50%;
     animation: glow 3s ease alternate;
 }
 
-.person-name{
-    margin: 100px 0px 0px 0px;
+.person-name {
+    color: #ca7c83;
 }
 
 .profile-content {
@@ -44,7 +41,7 @@
 }
 
 .profile-content__category-title {
-    color: #71548b;
+    color: #ca7c83;
 }
 
 .profile-content__category--hidden-mobile {
@@ -55,6 +52,30 @@
     display: flex;
     flex-direction: column;
 }
+
+.profile-contact {
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f3;
+    text-align: center;
+    height: 200px;
+    width: 300px;
+    margin-top: 20px;
+    border-radius: 15px 15px 15px 15px;
+}
+
+
+.profile-contact-category-title {
+    color: #ca7c83;
+    margin-top: 10px;
+    height: 20px;
+}
+
+.profile-contact-element {
+    color: #807d7d;
+    height: 50px;
+}
+
 
 .profile-content__element--hidden-mobile {
     display: flex;
@@ -67,7 +88,7 @@
     font-size: 18px;
     margin-bottom: 2px;
     margin-top: 6px;
-    color: #71548b;
+    color: #e8b0b5;
 }
 
 .profile-content__period {
@@ -75,7 +96,7 @@
 }
 
 .profile-content__institute {
-    color: #7a94b6;
+    color: #807d7d;
     margin-top: 0px;
     font-size: 14px;
 }
@@ -92,8 +113,8 @@
 
     .person-name {
         order: -1;
-        color: #71548b;
-        font-weight: bold;
+        color: #ca7c83;
+        margin: 45px 0px 0px 0px;
     }
 
     .profile-content__category--hidden-mobile {
@@ -104,13 +125,12 @@
         /*fix: anders als stipje zichtbaar*/
         .profile-content__category--hidden-mobile hr {
             width: 100%;
-            color: hotpink;
+            color: #212529;
         }
 
     .profile-content__element--hidden-mobile {
         display: flex;
-        color: #7a94b6;
-        
+        color: #807d7d;
     }
 
     .profile-content__element-header {
@@ -121,12 +141,13 @@
 
     .profile-content__period {
         font-size: 12px;
-        color: #adbbce;
+        color: #adadad;
         display: flex;
     }
 
     .personalia {
         border-radius: 15px 0px 0px 15px;
+        height: 750px;
     }
 }
 
