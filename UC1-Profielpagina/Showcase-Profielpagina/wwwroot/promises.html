@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <script>
+
+
+        //console.log('1');
+        //console.log('2');
+        //console.log('3');
+        //console.log('4');
+        //setTimeout(function () {
+        //    console.log('5');
+        //}, 1000)
+        //console.log('6');
+        
+        let resolver = function (resolve, reject) {
+            setTimeout(function () {
+                console.log('5');
+                resolve();
+                //reject('error');
+            }, 1000);
+        };
+
+        let print5Promise = new Promise(resolver);
+
+        //print5Promise.then(function () {
+        //    console.log('6');
+        //})
+        //    .catch(function (error) {
+        //    console.log(error);
+        //});
+
+        //console.log(print5Promise)
+
+        async function print56() {
+            await print5Promise;
+            console.log('6');
+        }
+
+        async function main() {
+            try {
+                await print56;
+            } catch (error) {
+                console.log(error);
+            }
+            
+        }
+
+        main();
+
+
+    </script>
+</body>
+</html>
