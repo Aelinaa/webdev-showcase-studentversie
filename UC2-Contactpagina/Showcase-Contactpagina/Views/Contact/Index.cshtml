@@ -1,4 +1,5 @@
 ﻿@model Contactform
+@inject IConfiguration configuration 
 @{
     ViewData["Title"] = "Contactpagina";
 }
@@ -8,31 +9,47 @@
 
         <h1>Contact</h1>
         <p>@ViewBag.Message</p>
+        <div id="flash-message"></div>
         <form method="post" class="form-contactpagina">
 
             <div class="form-contactpagina__inputelement fx-col">
                 <label for="firstname">Voornaam </label>
-                <input type="text" asp-for="FirstName" name="firstname" id="firstname" required>
+                <input type="text" asp-for="FirstName" name="firstname" id="firstname" maxlength="60" required>
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
                 <label for="lastname">Achternaam </label>
-                <input type="text" asp-for="LastName" name="lastname" id="lastname" required>
+                <input type="text" asp-for="LastName" name="lastname" id="lastname" maxlength="60" required>
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
                 <label for="email">E-mailadres </label>
-                <input type="email" asp-for="Email" name="email" id="email">
+                <input type="email" asp-for="Email" name="email" maxlength="80" id="email">
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
                 <label for="phone">Telefoonnummer </label>
-                <input type="tel" asp-for="Phone" name="phone" id="phone" required>
+                <input type="tel" asp-for="Phone" name="phone" id="phone" maxlength="20" required>
             </div>
 
-            <div class="form-contactpagina__inputelement">
-                <input type="submit" value="Verstuur!">
+            <div class="form-contactpagina__inputelement fx-col">
+                <label for="subject">Onderwerp </label>
+                <input type="text" asp-for="Subject" name="subject" id="subject" required>
+
             </div>
+
+            <div class="form-contactpagina__inputelement fx-col">
+                <label for="message">Bericht </label>
+                <textarea asp-for="Message" name="message" id="message" rows="11" cols="30" required placeholder="Schrijf je bericht hier..."></textarea>
+            </div>
+
+            <div id="spinner" class="spinner" style="display: none;"></div>
+
+            <div class="form-contactpagina__inputelement">
+                <input type="submit" id="submitbutton" value="Verstuur!">
+            </div>
+
+            
 
         </form>
 
@@ -42,87 +59,136 @@
 
 
 <script>
+    const inputEmail = document.getElementById('email');
+    const inputPhone = document.getElementById('phone');
+    const submitButton = document.getElementById("submitbutton");
+    const spinner = document.getElementById("spinner");
+    const flashMessageContainer = document.getElementById('flash-message');
+    let isValid = false;
 
-    
-   // Validate PhoneNumber
-   // const validatePhone = () => { 
-   //    const phoneValue = inputPhone.value.trim();
-   //    const phonePattern = /^\+?[0-9 ]{8,15}$/;
+    const form = document.querySelector('.form-contactpagina');
 
-   //     if (!phonePattern.test(phoneValue)) {
-   //      inputPhone.setCustomValidity("Enter a valid phone number (only numbers and spaces, 8-15 digits, optional +).");
-   //  } else {
-   //      inputPhone.setCustomValidity("");
-   //  }
+    //Dit zijn alle required input velden en textarea
+    const inputs = form.querySelectorAll("input[required], textarea[required]");
 
-   //  inputPhone.reportValidity();
-   // }
+    const toggleSubmitButton = () => {
+        submitButton.disabled = !form.checkValidity(); // Checkt of het hele formulier geldig is
+        isValid = form.check.checkValidity();
+    };
 
-const inputEmail = document.getElementById('email');
-const form = document.querySelector('.form-contactpagina');
-
-const validateEmail = () => { 
-    const maxLength = 80;
-    const emailValue = inputEmail.value.trim();
-
-    if (inputEmail.validity.typeMismatch) {
-        inputEmail.setCustomValidity("Voer een geldig e-mailadres in!");
-    } else if (emailValue.length > maxLength) {
-        inputEmail.setCustomValidity("Email mag niet langer dan 80 tekens zijn!");
-    } else {
-        inputEmail.setCustomValidity(""); // Reset de foutmelding
-    }
-    
-    inputEmail.reportValidity();
-};
-
-const validateForm = () => {
-    validateEmail();
-    return form.checkValidity(); // Controleert of alle velden geldig zijn
-};
-
-// Event listeners voor email validatie
-inputEmail.addEventListener("blur", validateEmail);
-inputEmail.addEventListener("input", validateEmail);
-
-// Event listener voor formulierinzending
-form.addEventListener('submit', function (event) {
-    event.preventDefault(); // Voorkom standaard formulierinzending
-
-    if (!validateForm()) {
-        return; // Stop formulierverwerking als validatie faalt
-    }
-
-    // Verkrijg CSRF-token van het formulier
-    const csrfToken = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-    // Serialiseer formuliergegevens
-    const formData = new URLSearchParams(new FormData(form));
-
-
-    // Voer een POST-verzoek uit
-    fetch('/contact', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Netwerkrespons was niet ok');
+    const flashMessage = (valid) => {
+        if (valid) {
+            flashMessageContainer.textContent = 'Formulier is succesvol ingediend!';
+            flashMessageContainer.className = 'success'; // Succes stijl
+        } else {
+            flashMessageContainer.textContent = 'Formulier kon niet worden ingediend.';
+            flashMessageContainer.className = 'error'; // Fout stijl
         }
-        return response.text();
-    })
-    .then(data => {
-        console.log('Formulier succesvol ingediend:', data);
-        form.reset(); // Reset het formulier na een succesvolle verzending
-    })
-    .catch(error => {
-        console.error('Er was een probleem met de formulierinzending:', error);
-        alert(error.message); // Toon een foutmelding aan de gebruiker
+
+        flashMessageContainer.style.display = 'block'; // Maak het bericht zichtbaar
+
+        // Verberg het bericht na 3 seconden
+        setTimeout(() => {
+            flashMessageContainer.style.display = 'none';
+        }, 3000);
+    };
+
+    // Schakel de knop uit bij het laden van de pagina
+    document.addEventListener("DOMContentLoaded", toggleSubmitButton);
+
+    //Geeft elke required input veld en textarea een eventlisteners voor het controleren van de knop
+    inputs.forEach(input => {
+        input.addEventListener("input", toggleSubmitButton); // Elke wijziging activeert validatie
     });
-});
+
+    //Validate Email
+    const validateEmail = () => { 
+        const maxLength = 80;
+        const emailValue = inputEmail.value.trim();
+
+        if (inputEmail.validity.typeMismatch) {
+            inputEmail.setCustomValidity("Voer een geldig e-mailadres in!");
+        } else if (emailValue.length > maxLength) {
+            inputEmail.setCustomValidity("Email mag niet langer dan 80 tekens zijn!");
+        } else {
+            inputEmail.setCustomValidity(""); // Reset de foutmelding
+        }
+    
+        inputEmail.reportValidity();
+    };
+
+    // Validate PhoneNumber
+       const validatePhone = () => { 
+          const phoneValue = inputPhone.value.trim();
+          const phonePattern = /^\+?[0-9 ]{8,20}$/;
+
+           if (!phonePattern.test(phoneValue)) {
+            inputPhone.setCustomValidity("Enter a valid phone number (only numbers and spaces, 8-20 digits, optional +).");
+        } else {
+            inputPhone.setCustomValidity("");
+        }
+
+        inputPhone.reportValidity();
+       }
+
+
+    //validate form
+    const validateForm = () => {
+        validateEmail();
+        validatePhone();
+       
+        return form.checkValidity(); // Controleert of alle velden geldig zijn
+    };
+
+    // Event listeners voor email validatie
+    inputEmail.addEventListener("blur", validateEmail);
+    inputEmail.addEventListener("input", validateEmail);
+
+    // Event listeners voor telefoonnummer validatie
+    inputPhone.addEventListener("blur", validatePhone);
+    inputPhone.addEventListener("input", validatePhone);
+
+    // Event listener voor formulierinzending
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Voorkom standaard formulierinzending
+
+        submitButton.disabled = true;
+        spinner.style.display = "block";
+
+        if (!validateForm()) {
+            return; // Stop formulierverwerking als validatie faalt
+        }
+
+        // Serialiseer formuliergegevens
+        const formData = new URLSearchParams(new FormData(form));
+
+        // Voer een POST-verzoek uit
+        fetch('/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Netwerkrespons was niet ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            console.log('Formulier succesvol ingediend:', [...formData.entries()]);
+            form.reset(); 
+            flashMessage(true);
+            spinner.style.display = "none";
+        })
+        .catch(error => {
+            console.error('Er was een probleem met de formulierinzending:', error);
+            flashMessage(false);
+            spinner.style.display = "none";
+            submitButton.disabled = false;
+        });
+    });
 
 
 

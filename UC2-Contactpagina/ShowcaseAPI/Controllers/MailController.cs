@@ -13,7 +13,7 @@ namespace ShowcaseAPI.Controllers
     {
         // POST api/<MailController>
         [HttpPost]
-        public ActionResult Post([Bind("FirstName, LastName, Email, Phone")] Contactform form)
+        public ActionResult Post([Bind("FirstName, LastName, Email, Phone, Subject, Message")] Contactform form)
         {
             //Op brightspace staan instructies over hoe je de mailfunctionaliteit werkend kunt maken:
             //Project Web Development > De showcase > Week 2: contactpagina (UC2) > Hoe verstuur je een mail vanuit je webapplicatie met Mailtrap?
@@ -22,10 +22,7 @@ namespace ShowcaseAPI.Controllers
                 Credentials = new NetworkCredential("8e48713481327b", "9db48cced83960"),
                 EnableSsl = true
             };
-            client.Send("from@example.com", "to@example.com", $"Test", $"{form.FirstName}");
-
-
-
+            client.Send("Sender@mail.com", "Lisa@Windesheim.com", $"{form.Subject}", $"{form.FirstName}" + " " + $"{form.LastName}" + $"\n{form.Email}" + $"\n{form.Phone}" + "\n" + "\nBericht:" + $"\n{form.Message}");
 
             System.Console.WriteLine("Sent");
 
