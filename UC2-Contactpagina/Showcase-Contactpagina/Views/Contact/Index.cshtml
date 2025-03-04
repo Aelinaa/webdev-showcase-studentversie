@@ -1,51 +1,95 @@
 ﻿@model Contactform
 @inject IConfiguration configuration 
 @{
+    var siteKey = configuration["reCaptchaSettings:SiteKey"];
     ViewData["Title"] = "Contactpagina";
 }
 
+<script type="text/javascript">
+   var onloadCallback = function() {
+        grecaptcha.render('html_element', {
+          'sitekey' : '@siteKey',
+          'callback': onRecaptchaSuccess,
+          'expired-callback': onRecaptchaExpired
+        });
+      };
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+    async defer>
+</script>
+
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+
+
 <div class="page">
+    <section class="personalia">
+
+        <img class="person-logo" src="images\pasfoto.png">
+        <h1 class="person-name">Lisa Gerrits</h1>
+
+        <div class="profile-contact">
+            <h3 class="profile-contact-category-title">Contactinformatie</h3>
+            <hr>
+            <p class="profile-contact-element"> <i class="fa-solid fa-envelope"></i>  lisa.gerrits03@gmail.com</p>
+            <p class="profile-contact-element"> <i class="fa fa-phone"></i>  06 38270316</p>
+            <p class="profile-contact-element"> <i class="fa-solid fa-calendar-days"></i>  11 maart 2003</p>
+        </div>
+
+
+    </section>
+
     <section class="contact">
 
-        <h1>Contact</h1>
+        
+
+        <h1 class="profile-contact-title">Contact</h1>
         <p>@ViewBag.Message</p>
         <div id="flash-message"></div>
         <form method="post" class="form-contactpagina">
+            <input type="hidden" id="recaptchaTokenInputId" asp-for="RecaptchaToken" />
 
             <div class="form-contactpagina__inputelement fx-col">
-                <label for="firstname">Voornaam </label>
-                <input type="text" asp-for="FirstName" name="firstname" id="firstname" maxlength="60" required>
+                <label for="firstname">Voornaam* </label>
+                <input type="text" asp-for="FirstName" name="firstname" id="firstname" maxlength="60" class="input-box" required>
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
-                <label for="lastname">Achternaam </label>
-                <input type="text" asp-for="LastName" name="lastname" id="lastname" maxlength="60" required>
+                <label for="lastname">Achternaam* </label>
+                <input type="text" asp-for="LastName" name="lastname" id="lastname" maxlength="60" class="input-box" required>
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
-                <label for="email">E-mailadres </label>
-                <input type="email" asp-for="Email" name="email" maxlength="80" id="email">
+                <label for="email">E-mailadres* </label>
+                <input type="email" asp-for="Email" name="email" maxlength="80" id="email" class="input-box">
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
-                <label for="phone">Telefoonnummer </label>
-                <input type="tel" asp-for="Phone" name="phone" id="phone" maxlength="20" required>
+                <label for="phone">Telefoonnummer* </label>
+                <input type="tel" asp-for="Phone" name="phone" id="phone" maxlength="20" class="input-box" required>
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
-                <label for="subject">Onderwerp </label>
-                <input type="text" asp-for="Subject" name="subject" id="subject" required>
+                <label for="subject">Onderwerp* </label>
+                <input type="text" asp-for="Subject" name="subject" id="subject" class="input-box" required>
 
             </div>
 
             <div class="form-contactpagina__inputelement fx-col">
-                <label for="message">Bericht </label>
-                <textarea asp-for="Message" name="message" id="message" rows="11" cols="30" required placeholder="Schrijf je bericht hier..."></textarea>
+                <label for="message">Bericht* </label>
+                <textarea asp-for="Message" name="message" id="message" rows="11" cols="30" class="input-box" required placeholder="Schrijf je bericht hier..."></textarea>
             </div>
+
+            <hr />
+            <div id="html_element"></div>
+            <hr />
 
             <div id="spinner" class="spinner" style="display: none;"></div>
 
             <div class="form-contactpagina__inputelement">
+                <input type="reset" id="resetbutton" value="Reset!">
                 <input type="submit" id="submitbutton" value="Verstuur!">
             </div>
 
@@ -64,7 +108,9 @@
     const submitButton = document.getElementById("submitbutton");
     const spinner = document.getElementById("spinner");
     const flashMessageContainer = document.getElementById('flash-message');
+    const resetButton = document.getElementById("resetbutton")
     let isValid = false;
+    let recaptchaValid = false;
 
     const form = document.querySelector('.form-contactpagina');
 
@@ -72,16 +118,22 @@
     const inputs = form.querySelectorAll("input[required], textarea[required]");
 
     const toggleSubmitButton = () => {
-        submitButton.disabled = !form.checkValidity(); // Checkt of het hele formulier geldig is
-        isValid = form.check.checkValidity();
+
+        //submitButton.disabled = !form.checkValidity(); // Checkt of het hele formulier geldig is
+        //isValid = form.checkValidity();
+        submitButton.disabled = true;
+        if(recaptchaValid){
+           submitButton.disabled = !form.checkValidity(); // Checkt of het hele formulier geldig is
+           isValid = form.checkValidity();
+        }
     };
 
-    const flashMessage = (valid) => {
+    const flashMessage = (valid, message) => {
         if (valid) {
-            flashMessageContainer.textContent = 'Formulier is succesvol ingediend!';
+            flashMessageContainer.textContent = message;
             flashMessageContainer.className = 'success'; // Succes stijl
         } else {
-            flashMessageContainer.textContent = 'Formulier kon niet worden ingediend.';
+            flashMessageContainer.textContent = message;
             flashMessageContainer.className = 'error'; // Fout stijl
         }
 
@@ -131,6 +183,21 @@
         inputPhone.reportValidity();
        }
 
+       // Callback functie wanneer reCAPTCHA succesvol is geverifieerd
+function onRecaptchaSuccess(response) {
+  console.log("reCAPTCHA succesvol geverifieerd. Response:", response);
+  // Je kunt bijvoorbeeld een formulier versturen of een andere actie uitvoeren
+  recaptchaValid = true;
+   toggleSubmitButton();
+}
+
+// Callback functie wanneer reCAPTCHA vervalt
+function onRecaptchaExpired() {
+  console.log("reCAPTCHA vervallen.");
+  // Je kunt hier iets doen om de gebruiker te waarschuwen dat ze opnieuw moeten verifiëren
+  recaptchaValid = false;
+   toggleSubmitButton();
+}
 
     //validate form
     const validateForm = () => {
@@ -148,9 +215,21 @@
     inputPhone.addEventListener("blur", validatePhone);
     inputPhone.addEventListener("input", validatePhone);
 
+    resetButton.addEventListener('click', function (event) {
+        if (recaptchaValid) {
+            grecaptcha.reset();
+            recaptchaValid = false;
+        }
+        
+        submitButton.disabled = true;
+    })
+
     // Event listener voor formulierinzending
     form.addEventListener('submit', function (event) {
         event.preventDefault(); // Voorkom standaard formulierinzending
+
+        var token = grecaptcha.getResponse();
+        document.getElementById("recaptchaTokenInputId").value = token;
 
         submitButton.disabled = true;
         spinner.style.display = "block";
@@ -179,12 +258,13 @@
         .then(data => {
             console.log('Formulier succesvol ingediend:', [...formData.entries()]);
             form.reset(); 
-            flashMessage(true);
+            grecaptcha.reset();
+            flashMessage(true, "Formulier succesvol ingediend");
             spinner.style.display = "none";
         })
         .catch(error => {
             console.error('Er was een probleem met de formulierinzending:', error);
-            flashMessage(false);
+            flashMessage(false, "Er was een probleem met de formulierinzending");
             spinner.style.display = "none";
             submitButton.disabled = false;
         });

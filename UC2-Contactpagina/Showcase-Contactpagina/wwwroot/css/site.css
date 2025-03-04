@@ -11,21 +11,104 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #f5f5f3;
+    color: #ca7c83;
+    border-radius: 0px 0px 15px 15px;
+    height:1120px;
+}
+
+.profile-contact-title {
+    margin-top: 45px;
 }
 
 .form-contactpagina__inputelement {
     display: flex;
     flex-direction: row;
-    margin: 15px 0px 15px 0px
 }
+
+.input-box {
+    border-radius: 5px;
+    padding: 4px;
+    border: 1px solid #e8b0b5; 
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+input:focus, textarea:focus {
+    border-color: #c57776; 
+    border-width: 2px;
+    outline: none; 
+}
+
+#submitbutton {
+    background-color: #e8b0b5; 
+    color: white; 
+    border: none;
+    border-radius: 5px; 
+    padding: 12px 25px; 
+    font-size: 16px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; 
+    width: 100%;
+    max-width: 300px;
+    text-align: center; 
+    margin-top: 10px;
+}
+
+    #submitbutton:hover {
+        background-color: #d88f95; 
+        transform: translateY(-3px); 
+    }
+
+    #submitbutton:focus {
+        outline: none;
+        box-shadow: 0 0 8px rgba(216, 143, 149, 0.6);
+    }
+
+    #submitbutton:disabled {
+        background-color: #d8d8d8; 
+        color: #a1a1a1; 
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none; 
+    }
+
+#resetbutton {
+    background-color: #e8b0b5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+    #resetbutton:hover {
+        background-color: #d88f95;
+        transform: translateY(-3px);
+    }
+
+    #resetbutton:focus {
+        outline: none;
+        box-shadow: 0 0 8px rgba(216, 143, 149, 0.6);
+    }
+
+
+
 
 .fx-col {
     flex-direction: column;
 }
 
 .spinner {
-    border: 5px solid #f3f3f3; /* Light grey */
-    border-top: 5px solid #3498db; /* Blue */
+    border: 5px solid #f3f3f3; 
+    border-top: 5px solid #3498db;
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -45,7 +128,7 @@
 #flash-message {
     display: none;
     padding: 15px;
-    margin-top: 10px;
+    margin-bottom:15px;
     border-radius: 5px;
     font-weight: bold;
     text-align: center;
@@ -56,14 +139,80 @@
 }
 
 .success {
-    background-color: #4CAF50; /* Groen voor succes */
+    background-color: #4CAF50; 
     color: white;
 }
 
 .error {
-    background-color: #f44336; /* Rood voor fout */
+    background-color: #f44336; 
     color: white;
 }
 
+.personalia {
+    background-color: #faebec;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 550px;
+    border-radius: 15px 15px 0px 0px;
+}
+
+.person-logo {
+    border: 6px solid black;
+    border-radius: 50%;
+    border-color: #eeb6bb;
+    margin: 15px 0px 15px 0px;
+    width: 50%;
+    animation: glow 3s ease alternate;
+}
+
+.person-name {
+    color: #ca7c83;
+}
+
+.profile-contact {
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f3;
+    text-align: center;
+    height: 200px;
+    width: 300px;
+    margin-top: 20px;
+    border-radius: 15px 15px 15px 15px;
+}
+
+
+.profile-contact-category-title {
+    color: #ca7c83;
+    margin-top: 10px;
+    height: 20px;
+}
+
+.profile-contact-element {
+    color: #807d7d;
+    height: 50px;
+}
+
+
 @media only screen and (min-width: 800px) {
+    .page {
+        flex-direction: row;
+    }
+
+    .person-name {
+        order: -1;
+        color: #ca7c83;
+        margin: 45px 0px 0px 0px;
+    }
+
+    .personalia {
+        border-radius: 15px 0px 0px 15px;
+        height: 1150px;
+    }
+
+    .contact {
+        border-radius: 0px 15px 15px 0px;
+        height: 1150px;
+    }
 }

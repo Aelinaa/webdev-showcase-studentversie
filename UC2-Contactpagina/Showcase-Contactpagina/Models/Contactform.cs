@@ -4,6 +4,7 @@ namespace Showcase_Contactpagina.Models
 {
     public class Contactform
     {
+        public string? RecaptchaToken { get; set; }
 
         [Required]
         [StringLength(60)]
